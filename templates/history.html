@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prediction History - Parkinson AI</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 1400px;
+        margin: 40px auto;
+    }
+
+    .header {
+        background: white;
+        padding: 30px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .header h1 {
+        margin: 0 0 10px;
+        font-size: 32px;
+        color: #123b70;
+    }
+
+    .header p {
+        margin: 0;
+        color: #6b7280;
+    }
+
+    .card {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1100px;
+    }
+
+    th {
+        background: #f3f6fa;
+        padding: 15px;
+        text-align: left;
+        font-size: 14px;
+        color: #123b70;
+    }
+
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .patient {
+        font-weight: bold;
+    }
+
+    .patient-id {
+        background: #eef2ff;
+        color: #3730a3;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 13px;
+    }
+
+    .danger {
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .safe {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .delete-btn {
+        border: none;
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 10px 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .delete-btn:hover {
+        background: #dc2626;
+        color: white;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 70px 20px;
+    }
+
+    .empty h2 {
+        margin-bottom: 10px;
+        color: #123b70;
+    }
+
+    .empty p {
+        color: #6b7280;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        gap: 15px;
+    }
+
+    .back {
+        background: #2563eb;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .back:hover {
+        background: #1d4ed8;
+    }
+
+    .clear-btn {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .clear-btn:hover {
+        background: #b91c1c;
+    }
+
+    @media (max-width: 700px) {
+
+        .container {
+            width: 92%;
+            margin: 20px auto;
+        }
+
+        .header {
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 25px;
+        }
+
+        .buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .back,
+        .clear-btn {
+            text-align: center;
+            width: 100%;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <h1>Prediction History</h1>
+    <p>Patient Parkinson's prediction records</p>
+</div>
+
+<div class="card">
+
+    {% if records %}
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Patient Name</th>
+                <th>Patient ID</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+                <th>Risk</th>
+                <th>Date</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for record in records %}
+
+            <tr>
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+                <td class="patient">
+                    {{ record.get("Patient Name", "Unknown") }}
+                </td>
+
+                <td>
+                    <span class="patient-id">
+                        {{ record.get("Patient ID", "N/A") }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ record.get("Age", "N/A") }}
+                </td>
+
+                <td>
+                    {{ record.get("Gender", "N/A") }}
+                </td>
+
+                <td>
+
+                    {% if record.get("Prediction", "") == "Parkinson's Disease Detected" %}
+
+                        <span class="danger">
+                            Parkinson's Detected
+                        </span>
+
+                    {% else %}
+
+                        <span class="safe">
+                            No Parkinson's
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ record.get("Confidence", 0) }}%
+                </td>
+
+                <td>
+                    {{ record.get("Risk Level", "N/A") }}
+                </td>
+
+                <td>
+                    {{ record.get("Date", "N/A") }}
+                </td>
+
+                <td>
+
+                    <form
+                        action="{{ url_for('delete_record', record_id=record['_original_index']) }}"
+                        method="POST"
+                        onsubmit="return confirm('Delete this record?');"
+                    >
+
+                        <button
+                            type="submit"
+                            class="delete-btn"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    <div class="buttons">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="back"
+        >
+            ← Back to Dashboard
+        </a>
+
+        <form
+            action="{{ url_for('clear_history') }}"
+            method="POST"
+            onsubmit="return confirm('Delete ALL prediction history? This cannot be undone.');"
+        >
+
+            <button
+                type="submit"
+                class="clear-btn"
+            >
+                Delete All History
+            </button>
+
+        </form>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+
+        <h2>
+            No Prediction History
+        </h2>
+
+        <p>
+            No patient predictions have been saved yet.
+        </p>
+
+        <br>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="back"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+</div>
+
+</body>
+</html>

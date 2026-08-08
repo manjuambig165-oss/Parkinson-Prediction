@@ -1,0 +1,7 @@
+users.db
+prediction_history.csv
+history.json
+__pycache__/
+venv/
+.venv/
+.env

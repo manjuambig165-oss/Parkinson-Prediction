@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>About - Parkinson AI</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+
+<body>
+
+<div class="dashboard">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-brain"></i>
+
+            <span>Parkinson AI</span>
+
+        </div>
+
+
+        <nav>
+
+            <a href="/dashboard">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="/prediction">
+
+                <i class="fa-solid fa-stethoscope"></i>
+
+                <span>Prediction</span>
+
+            </a>
+
+
+            <a href="/history">
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                <span>History</span>
+
+            </a>
+
+
+            <a href="/about" class="active">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+                <span>About</span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <div class="about-header">
+
+            <div>
+
+                <h1>
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    About Parkinson AI
+
+                </h1>
+
+                <p>
+                    Learn more about our Parkinson's Disease
+                    prediction system.
+                </p>
+
+            </div>
+
+
+            <div class="about-header-icon">
+
+                <i class="fa-solid fa-brain"></i>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= INTRO CARD ================= -->
+
+        <section class="about-main-card">
+
+            <div class="about-main-icon">
+
+                <i class="fa-solid fa-brain"></i>
+
+            </div>
+
+
+            <div class="about-main-content">
+
+                <h2>
+                    Parkinson's Disease Prediction System
+                </h2>
+
+                <p>
+                    Parkinson AI is a machine learning based
+                    healthcare support system designed to analyze
+                    biomedical voice measurements and provide a
+                    prediction related to Parkinson's disease.
+                </p>
+
+                <p>
+                    The system uses a trained Random Forest
+                    Classifier to analyze the input measurements
+                    and generate a prediction with a confidence
+                    score.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= TECHNOLOGY ================= -->
+
+        <h2 class="about-section-title">
+            <i class="fa-solid fa-microchip"></i>
+            Technology Used
+        </h2>
+
+
+        <section class="about-grid">
+
+
+            <!-- Machine Learning -->
+
+            <div class="about-card">
+
+                <div class="about-card-icon blue">
+
+                    <i class="fa-solid fa-brain"></i>
+
+                </div>
+
+                <h3>
+                    Machine Learning
+                </h3>
+
+                <p>
+                    Random Forest Classifier is used to
+                    classify biomedical voice measurements
+                    and generate prediction results.
+                </p>
+
+            </div>
+
+
+
+            <!-- Flask -->
+
+            <div class="about-card">
+
+                <div class="about-card-icon purple">
+
+                    <i class="fa-solid fa-flask"></i>
+
+                </div>
+
+                <h3>
+                    Flask
+                </h3>
+
+                <p>
+                    Flask provides the web application
+                    framework that connects the prediction
+                    model with the user interface.
+                </p>
+
+            </div>
+
+
+
+            <!-- Python -->
+
+            <div class="about-card">
+
+                <div class="about-card-icon green">
+
+                    <i class="fa-brands fa-python"></i>
+
+                </div>
+
+                <h3>
+                    Python
+                </h3>
+
+                <p>
+                    Python is used for data processing,
+                    machine learning, model prediction,
+                    and application development.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= HOW IT WORKS ================= -->
+
+        <h2 class="about-section-title">
+
+            <i class="fa-solid fa-gears"></i>
+
+            How It Works
+
+        </h2>
+
+
+        <section class="steps">
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h3>
+                        Enter Measurements
+                    </h3>
+
+                    <p>
+                        Enter the required biomedical
+                        voice measurements in the prediction form.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h3>
+                        Data Processing
+                    </h3>
+
+                    <p>
+                        The input data is processed using
+                        the trained preprocessing objects.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h3>
+                        AI Prediction
+                    </h3>
+
+                    <p>
+                        The Random Forest model analyzes
+                        the measurements and generates a prediction.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <div>
+
+                    <h3>
+                        View Result
+                    </h3>
+
+                    <p>
+                        The system displays the prediction
+                        and confidence percentage.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================= DISCLAIMER ================= -->
+
+        <section class="about-disclaimer">
+
+            <div class="disclaimer-icon">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Important Information
+                </h3>
+
+                <p>
+                    This system is developed as a machine
+                    learning project and is intended for
+                    educational and decision-support purposes.
+                    It should not be used as a substitute for
+                    professional medical diagnosis or treatment.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BUTTONS ================= -->
+
+        <div class="about-buttons">
+
+            <a href="/dashboard" class="about-button secondary">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Dashboard
+
+            </a>
+
+
+            <a href="/prediction" class="about-button primary">
+
+                <i class="fa-solid fa-stethoscope"></i>
+
+                Start Prediction
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Parkinson AI - Voice Analysis</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+    /* =====================================================
+       PAGE
+    ===================================================== */
+
+    .analysis-page {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .analysis-header {
+        margin-bottom: 25px;
+    }
+
+    .analysis-header h1 {
+        color: #123b70;
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .analysis-header h1 i {
+        color: #0759d7;
+        margin-right: 10px;
+    }
+
+    .analysis-header p {
+        color: #64748b;
+    }
+
+
+    /* =====================================================
+       PATIENT SUMMARY
+    ===================================================== */
+
+    .patient-summary {
+        background: #f1f6ff;
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin-bottom: 25px;
+
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+    }
+
+    .summary-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .summary-label {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .summary-value {
+        font-size: 14px;
+        color: #123b70;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       FORM CARD
+    ===================================================== */
+
+    .prediction-form-card {
+        background: white;
+        border-radius: 22px;
+        padding: 30px;
+        border: 1px solid #edf1f6;
+
+        box-shadow:
+            0 8px 30px rgba(15, 23, 42, 0.07);
+    }
+
+
+    /* =====================================================
+       FORM TITLE
+    ===================================================== */
+
+    .form-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 28px;
+    }
+
+    .form-title-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+
+        background: #e8f1ff;
+        color: #0759d7;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+    }
+
+    .form-title-icon i {
+        font-size: 23px;
+    }
+
+    .form-title h2 {
+        color: #123b70;
+        margin: 0 0 4px 0;
+    }
+
+    .form-title p {
+        color: #64748b;
+        font-size: 14px;
+        margin: 0;
+    }
+
+
+    /* =====================================================
+       FORM GRID
+    ===================================================== */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .input-group input {
+        width: 100%;
+        box-sizing: border-box;
+
+        padding: 13px 14px;
+
+        border: 1px solid #dbe3ed;
+        border-radius: 10px;
+
+        background: #f8fafc;
+
+        outline: none;
+        font-size: 14px;
+
+        transition: all 0.2s ease;
+    }
+
+    .input-group input:focus {
+        border-color: #0759d7;
+        background: white;
+
+        box-shadow:
+            0 0 0 3px rgba(7, 89, 215, 0.08);
+    }
+
+    .input-group input::placeholder {
+        color: #94a3b8;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .predict-button {
+        border: none;
+
+        padding: 14px 24px;
+
+        border-radius: 11px;
+
+        color: white;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0759d7,
+                #008fc9
+            );
+
+        font-weight: 700;
+        cursor: pointer;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+
+        transition: all 0.2s ease;
+    }
+
+    .reset-button {
+        border: none;
+
+        padding: 14px 22px;
+
+        border-radius: 11px;
+
+        background: #f1f5f9;
+        color: #475569;
+
+        font-weight: 700;
+        cursor: pointer;
+
+        transition: all 0.2s ease;
+    }
+
+    .predict-button:hover,
+    .reset-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .predict-button:active,
+    .reset-button:active {
+        transform: translateY(0);
+    }
+
+
+    /* =====================================================
+       LOADER
+    ===================================================== */
+
+    .loader {
+        display: none;
+
+        text-align: center;
+
+        background: white;
+
+        padding: 35px;
+
+        margin-top: 25px;
+
+        border-radius: 18px;
+
+        box-shadow:
+            0 5px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .loader-spinner {
+        width: 45px;
+        height: 45px;
+
+        margin: auto;
+
+        border: 5px solid #e2e8f0;
+        border-top-color: #0759d7;
+
+        border-radius: 50%;
+
+        animation: spin 1s linear infinite;
+    }
+
+    .loader h3 {
+        color: #123b70;
+        margin-top: 18px;
+        margin-bottom: 7px;
+    }
+
+    .loader p {
+        color: #64748b;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    /* =====================================================
+       MEDICAL NOTE
+    ===================================================== */
+
+    .medical-note {
+        margin-top: 25px;
+
+        padding: 15px;
+
+        background: #fff7ed;
+
+        border: 1px solid #fed7aa;
+
+        border-radius: 12px;
+
+        color: #9a3412;
+
+        display: flex;
+
+        gap: 10px;
+
+        align-items: flex-start;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+    .medical-note i {
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 1000px) {
+
+        .form-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .patient-summary {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+        .analysis-page {
+            width: 100%;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .patient-summary {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .prediction-form-card {
+            padding: 20px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .predict-button,
+        .reset-button {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .analysis-header h1 {
+            font-size: 25px;
+        }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+        .patient-summary {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+```
+<div class="logo">
+
+    <i class="fa-solid fa-brain"></i>
+
+    <span>Parkinson AI</span>
+
+</div>
+
+
+<nav>
+
+    <a href="/dashboard">
+
+        <i class="fa-solid fa-house"></i>
+
+        <span>Dashboard</span>
+
+    </a>
+
+
+    <a href="/prediction"
+       class="active">
+
+        <i class="fa-solid fa-stethoscope"></i>
+
+        <span>Prediction</span>
+
+    </a>
+
+
+    <a href="/history">
+
+        <i class="fa-solid fa-clock-rotate-left"></i>
+
+        <span>History</span>
+
+    </a>
+
+
+    <a href="/about">
+
+        <i class="fa-solid fa-user-doctor"></i>
+
+        <span>About</span>
+
+    </a>
+
+</nav>
+```
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content">
+
+```
+<div class="analysis-page">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <div class="analysis-header">
+
+        <h1>
+
+            <i class="fa-solid fa-wave-square"></i>
+
+            Parkinson's Voice Analysis
+
+        </h1>
+
+        <p>
+
+            Enter the 22 biomedical voice measurements
+            for AI prediction.
+
+        </p>
+
+    </div>
+
+
+    <!-- =================================================
+         PATIENT SUMMARY
+    ================================================== -->
+
+    <div class="patient-summary">
+
+
+        <div class="summary-item">
+
+            <span class="summary-label">
+                Patient Name
+            </span>
+
+            <span class="summary-value">
+                {{ patient_name or "Not Provided" }}
+            </span>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-label">
+                Patient ID
+            </span>
+
+            <span class="summary-value">
+                {{ patient_id or "Not Provided" }}
+            </span>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-label">
+                Age
+            </span>
+
+            <span class="summary-value">
+                {{ age or "Not Provided" }}
+            </span>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-label">
+                Gender
+            </span>
+
+            <span class="summary-value">
+                {{ gender or "Not Provided" }}
+            </span>
+
+        </div>
+
+
+        <div class="summary-item">
+
+            <span class="summary-label">
+                Examination Date
+            </span>
+
+            <span class="summary-value">
+                {{ exam_date or "Not Provided" }}
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================================
+         FORM CARD
+    ================================================== -->
+
+    <div class="prediction-form-card">
+
+
+        <div class="form-title">
+
+            <div class="form-title-icon">
+
+                <i class="fa-solid fa-wave-square"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Voice Measurements
+                </h2>
+
+                <p>
+                    Enter the patient's biomedical
+                    voice measurements.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PREDICTION FORM
+        ================================================== -->
+
+        <form
+            action="{{ url_for('predict') }}"
+            method="POST"
+            onsubmit="showLoader()"
+        >
+
+
+            <!-- =================================================
+                 PRESERVE PATIENT INFORMATION
+            ================================================== -->
+
+            <input
+                type="hidden"
+                name="patient_name"
+                value="{{ patient_name }}"
+            >
+
+            <input
+                type="hidden"
+                name="age"
+                value="{{ age }}"
+            >
+
+            <input
+                type="hidden"
+                name="gender"
+                value="{{ gender }}"
+            >
+
+            <input
+                type="hidden"
+                name="phone"
+                value="{{ phone }}"
+            >
+
+            <input
+                type="hidden"
+                name="patient_id"
+                value="{{ patient_id }}"
+            >
+
+            <input
+                type="hidden"
+                name="exam_date"
+                value="{{ exam_date }}"
+            >
+
+            <input
+                type="hidden"
+                name="notes"
+                value="{{ notes }}"
+            >
+
+
+            <!-- =================================================
+                 22 VOICE FEATURES
+            ================================================== -->
+
+            <div class="form-grid">
+
+
+                <!-- 1 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Fo(Hz)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="Fo"
+                        placeholder="Example: 119.99"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 2 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Fhi(Hz)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="Fhi"
+                        placeholder="Example: 157.30"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 3 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Flo(Hz)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="Flo"
+                        placeholder="Example: 74.99"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 4 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Jitter(%)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="Jitter"
+                        placeholder="Example: 0.00784"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 5 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Jitter(Abs)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="JitterAbs"
+                        placeholder="Example: 0.00007"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 6 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:RAP
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="RAP"
+                        placeholder="Example: 0.00370"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 7 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:PPQ
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="PPQ"
+                        placeholder="Example: 0.00554"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 8 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Jitter:DDP
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="DDP"
+                        placeholder="Example: 0.01109"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 9 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Shimmer
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="Shimmer"
+                        placeholder="Example: 0.04374"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 10 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:Shimmer(dB)
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="ShimmerDB"
+                        placeholder="Example: 0.426"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 11 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Shimmer:APQ3
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="APQ3"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 12 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Shimmer:APQ5
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="APQ5"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 13 -->
+
+                <div class="input-group">
+
+                    <label>
+                        MDVP:APQ
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="APQ"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 14 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Shimmer:DDA
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="DDA"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 15 -->
+
+                <div class="input-group">
+
+                    <label>
+                        NHR
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="NHR"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 16 -->
+
+                <div class="input-group">
+
+                    <label>
+                        HNR
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="HNR"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 17 -->
+
+                <div class="input-group">
+
+                    <label>
+                        RPDE
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="RPDE"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 18 -->
+
+                <div class="input-group">
+
+                    <label>
+                        DFA
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="DFA"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 19 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Spread1
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="spread1"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 20 -->
+
+                <div class="input-group">
+
+                    <label>
+                        Spread2
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="spread2"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 21 -->
+
+                <div class="input-group">
+
+                    <label>
+                        D2
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="D2"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- 22 -->
+
+                <div class="input-group">
+
+                    <label>
+                        PPE
+                    </label>
+
+                    <input
+                        type="number"
+                        step="any"
+                        name="PPE"
+                        placeholder="Enter value"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 BUTTONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+
+                <button
+                    type="submit"
+                    class="predict-button"
+                    id="predictButton"
+                >
+
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+
+                    Predict Parkinson's Risk
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+                <button
+                    type="reset"
+                    class="reset-button"
+                    onclick="hideLoader()"
+                >
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                    Clear
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- =================================================
+         LOADING SECTION
+    ================================================== -->
+
+    <div
+        id="loader"
+        class="loader"
+    >
+
+        <div class="loader-spinner"></div>
+
+        <h3>
+            Analyzing Voice Measurements...
+        </h3>
+
+        <p>
+            Our AI model is processing the information.
+            Please wait.
+        </p>
+
+    </div>
+
+
+    <!-- =================================================
+         MEDICAL DISCLAIMER
+    ================================================== -->
+
+    <div class="medical-note">
+
+        <i class="fa-solid fa-shield-heart"></i>
+
+        <span>
+
+            This system is intended for educational
+            and decision-support purposes and should
+            not replace professional medical diagnosis.
+
+        </span>
+
+    </div>
+
+
+</div>
+```
+
+</main>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+function showLoader() {
+
+    const loader = document.getElementById("loader");
+    const button = document.getElementById("predictButton");
+
+    loader.style.display = "block";
+
+    button.disabled = true;
+
+    button.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> ' +
+        'Analyzing...';
+
+}
+
+
+function hideLoader() {
+
+    const loader = document.getElementById("loader");
+    const button = document.getElementById("predictButton");
+
+    loader.style.display = "none";
+
+    button.disabled = false;
+
+    button.innerHTML =
+        '<i class="fa-solid fa-magnifying-glass-chart"></i> ' +
+        'Predict Parkinson\'s Risk ' +
+        '<i class="fa-solid fa-arrow-right"></i>';
+
+}
+
+</script>
+
+</body>
+
+</html>

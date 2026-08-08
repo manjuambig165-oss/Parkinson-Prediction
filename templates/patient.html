@@ -1,0 +1,515 @@
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Profile - Parkinson AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        .patient-page {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .patient-header {
+            margin-bottom: 30px;
+        }
+
+        .patient-header h1 {
+            color: #123b70;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .patient-header h1 i {
+            color: #0759d7;
+            margin-right: 10px;
+        }
+
+        .patient-header p {
+            color: #64748b;
+        }
+
+        .patient-card {
+            background: white;
+            border-radius: 22px;
+            padding: 35px;
+            box-shadow:
+                0 8px 30px rgba(15, 23, 42, 0.08);
+            border: 1px solid #edf1f6;
+        }
+
+        .profile-icon {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #e8f1ff;
+            color: #0759d7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-icon i {
+            font-size: 40px;
+        }
+
+        .profile-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-title h2 {
+            color: #123b70;
+            margin-bottom: 8px;
+        }
+
+        .profile-title p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .patient-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .form-group label i {
+            color: #0759d7;
+            margin-right: 7px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #dbe3ed;
+            border-radius: 11px;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #0759d7;
+            background: white;
+            box-shadow:
+                0 0 0 3px rgba(7, 89, 215, 0.08);
+        }
+
+        .form-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .back-btn,
+        .continue-btn {
+            text-decoration: none;
+            padding: 14px 22px;
+            border-radius: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .back-btn {
+            color: #475569;
+            background: #f1f5f9;
+        }
+
+        .continue-btn {
+            border: none;
+            color: white;
+            background: linear-gradient(
+                135deg,
+                #0759d7,
+                #008fc9
+            );
+            cursor: pointer;
+        }
+
+        .back-btn:hover,
+        .continue-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 700px) {
+
+            .patient-card {
+                padding: 25px 18px;
+            }
+
+            .patient-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-buttons {
+                grid-column: auto;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .back-btn,
+            .continue-btn {
+                justify-content: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-brain"></i>
+
+        <span>Parkinson AI</span>
+
+    </div>
+
+
+    <nav>
+
+        <a href="/dashboard">
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="/prediction"
+           class="active">
+
+            <i class="fa-solid fa-stethoscope"></i>
+
+            <span>Prediction</span>
+
+        </a>
+
+
+        <a href="/history">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            <span>History</span>
+
+        </a>
+
+
+        <a href="/about">
+
+            <i class="fa-solid fa-user-doctor"></i>
+
+            <span>About</span>
+
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-content">
+
+    <div class="patient-page">
+
+
+        <div class="patient-header">
+
+            <h1>
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Patient Profile
+
+            </h1>
+
+            <p>
+                Enter patient information before starting
+                the Parkinson's disease analysis.
+            </p>
+
+        </div>
+
+
+        <div class="patient-card">
+
+
+            <div class="profile-icon">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+
+            <div class="profile-title">
+
+                <h2>
+                    Patient Information
+                </h2>
+
+                <p>
+                    Please provide the basic patient details.
+                </p>
+
+            </div>
+
+
+            <form
+                class="patient-form"
+                action="/start-prediction"
+                method="POST"
+            >
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-user"></i>
+
+                        Patient Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="patient_name"
+                        placeholder="Enter patient name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-calendar"></i>
+
+                        Age
+
+                    </label>
+
+                    <input
+                        type="number"
+                        name="age"
+                        min="1"
+                        max="120"
+                        placeholder="Enter age"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-venus-mars"></i>
+
+                        Gender
+
+                    </label>
+
+                    <select name="gender" required>
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        Phone Number
+
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter phone number"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-id-card"></i>
+
+                        Patient ID
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="patient_id"
+                        placeholder="Enter patient ID"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+
+                        <i class="fa-solid fa-calendar-days"></i>
+
+                        Examination Date
+
+                    </label>
+
+                    <input
+                        type="date"
+                        name="exam_date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>
+
+                        <i class="fa-solid fa-note-sticky"></i>
+
+                        Notes
+
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        placeholder="Optional notes about the patient..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-buttons">
+
+                    <a
+                        href="/dashboard"
+                        class="back-btn"
+                    >
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="continue-btn"
+                    >
+
+                        Continue to Voice Analysis
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>
+```
