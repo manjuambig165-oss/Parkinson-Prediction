@@ -1,4 +1,4 @@
-# 🧠 Parkinson AI - Voice Analysis & Prediction System
+# 🧠 Parkinson AI - Prediction System
 
 An AI-powered web application for Parkinson's disease prediction using biomedical voice measurements.
 
